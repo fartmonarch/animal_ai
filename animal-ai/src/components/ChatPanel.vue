@@ -11,7 +11,7 @@
         <div class="chat-body">
             <div v-if="messages.length > 1" class="chat-messages">
                 <div v-for="(msg, index) in messages" :key="index" :class="['chat-msg', msg.role]">
-                    <div class="bubble">{{ msg.content }}</div>
+                    <div class="bubble" v-html="formatMessage(msg.content)"></div>
                 </div>
             </div>
 
@@ -54,6 +54,15 @@ const handleSubmit = async () => {
         messages.value.push({ role: 'ai', content: '❌ 出现错误，请稍后再试。' })
     }
 }
+
+function formatMessage(content) {
+    // 支持 \n 换行，也支持 markdown 的双换行
+    if (!content) return ''
+    return content
+        .replace(/\\n/g, '<br />')   // 防止有多重转义
+        .replace(/\n/g, '<br />')
+}
+
 </script>
 
 <style scoped>
